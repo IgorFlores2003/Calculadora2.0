@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './index.css'
+import gremioLogo from'./imagem/Gremio.png'
 
 function App() {
   const [displayValue, setDisplayValue] = useState('0');
@@ -149,7 +150,10 @@ function App() {
 
 
   return (
-    <div className="bg-blue-500 w-80 mx-auto my-10 p-4 rounded-lg shadow-lg sm:w-full md:w-80 shadow-current bg-[url('C:\Users\labunivas06\Desktop\Calculadora2.0-main\Calculadora2.0-main\src\imagem\Gremio.png')]" >
+    <div 
+    className="bg-blue-500 w-80 mx-auto my-10 p-4 rounded-lg shadow-lg sm:w-full md:w-80 shadow-current" 
+    style={{ backgroundImage: `url(${gremioLogo})` }}  
+  >
       <input className="w-full text-right pr-3 text-2xl bg-white text-black border-1 rounded-lg h-16 border-cyan-500" type='text' value={displayValue} disabled />
 
       <div className="grid grid-cols-4 gap-4 mt-8">
