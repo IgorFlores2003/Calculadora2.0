@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import './index.css'
-import gremioLogo from'./imagem/Gremio.png'
+import React, { useEffect, useState } from 'react';
+import './index.css';
+import gremioLogo from './imagem/Gremio.png';
 
 function App() {
   const [displayValue, setDisplayValue] = useState('0');
   const [selectedOperator, setSelectOperator] = useState(false);
   const [decimalAllowed, setDecimalAllowed] = useState(true);
+  const Maxlenth = 10000
 
   const setNumber = (number) => {
     if (selectedOperator) {
@@ -13,7 +14,7 @@ function App() {
         return;
       }
       setDisplayValue((prevValue) =>
-        prevValue === '0' || prevValue === 'Não Possivel Calcular'
+        prevValue === '0' || prevValue === 'Não Possível Calcular'
           ? number
           : prevValue + number
       );
@@ -24,7 +25,7 @@ function App() {
         return;
       }
       setDisplayValue((prevValue) =>
-        prevValue === '0' || prevValue === 'Não Possivel Calcular'
+        prevValue === '0' || prevValue === 'Não Possível Calcular'
           ? number
           : prevValue + number
       );
@@ -72,13 +73,14 @@ function App() {
         console.log(finalDigit);
         setDecimalAllowed(true);
       }
-      setDisplayValue(newValue);
+      setDisplayValue(newValue || '0');
     }
   };
 
   const calculateFactorial = (num) => {
-    if (num < 0) return 'Não Possivel Calcular';
+    if (num < 0) return 'Não Possível Calcular';
     if (num === 0) return 1;
+    if(num > Maxlenth) return "Infinity";
     return num * calculateFactorial(num - 1);
   };
 
@@ -112,7 +114,7 @@ function App() {
       if (displayValue.includes('!')) {
         const num = parseInt(displayValue.slice(0, -1), 10);
         if (isNaN(num)) {
-          setDisplayValue('Não Possivel Calcular');
+          setDisplayValue('Não Possível Calcular');
         } else {
           const result = calculateFactorial(num);
           setDisplayValue(result.toString());
@@ -120,13 +122,13 @@ function App() {
       } else {
         const result = eval(displayValue);
         if (result === Infinity || isNaN(result)) {
-          setDisplayValue('Não Possivel Calcular');
+          setDisplayValue('Não Possível Calcular');
         } else {
           setDisplayValue(result.toString());
         }
       }
     } catch (error) {
-      setDisplayValue('Não Possivel Calcular');
+      setDisplayValue('Não Possível Calcular');
     }
   };
 
@@ -135,25 +137,23 @@ function App() {
     if (!isNaN(num)) {
       const result = calculateFactorial(num);
       setDisplayValue(result.toString());
+
     }
   };
 
   const calculatePercentage = () => {
-    const expression = displayValue.replace(/%/g, '/100');
-    try {
-      const result = eval(expression);
+    const currentNumber = parseFloat(displayValue);
+    if (!isNaN(currentNumber)) {
+      const result = currentNumber / 100;
       setDisplayValue(result.toString());
-    } catch (error) {
-      setDisplayValue('Não Possivel Calcular');
     }
   };
 
-
   return (
     <div 
-    className="bg-blue-500 w-80 mx-auto my-10 p-4 rounded-lg shadow-lg sm:w-full md:w-80 shadow-current" 
-    style={{ backgroundImage: `url(${gremioLogo})` }}  
-  >
+      className="bg-blue-500 w-80 mx-auto my-10 p-4 rounded-lg shadow-lg sm:w-full md:w-80 shadow-current" 
+      style={{ backgroundImage: `url(${gremioLogo})` }}  
+    >
       <input className="w-full text-right pr-3 text-2xl bg-white text-black border-1 rounded-lg h-16 border-cyan-500" type='text' value={displayValue} disabled />
 
       <div className="grid grid-cols-4 gap-4 mt-8">
@@ -176,10 +176,10 @@ function App() {
         <button className="text-xl py-3 bg-blue-400 text-white rounded-lg border-2 border-black" onClick={() => setDot(".")}>.</button>
         <button className="text-xl py-3 bg-blue-400 text-white rounded-lg border-2 border-black" onClick={() => calculateFactorialAndDisplay()}>!</button>
         <button className="text-xl py-3 bg-blue-400 text-white rounded-lg border-2 border-black" onClick={() => calculatePercentage()}>%</button>
-        <button className="text-xl py-3 bg-blue-400 text-white rounded-lg border-2 border-black	"onClick={() => calculate()}>=</button>
+        <button className="text-xl py-3 bg-blue-400 text-white rounded-lg border-2 border-black" onClick={() => calculate()}>=</button>
       </div>
     </div>
   );
 }
 
-export default App; 
+export default App;
