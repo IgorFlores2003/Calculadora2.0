@@ -6,7 +6,7 @@ function App() {
   const [displayValue, setDisplayValue] = useState('0');
   const [selectedOperator, setSelectOperator] = useState(false);
   const [decimalAllowed, setDecimalAllowed] = useState(true);
-  const Maxlenth = 10000
+  const Maxlenth = 10000;
 
   const setNumber = (number) => {
     if (selectedOperator) {
@@ -19,7 +19,7 @@ function App() {
           : prevValue + number
       );
       setSelectOperator(false);
-      setDecimalAllowed(false);
+      setDecimalAllowed(number !== '.');
     } else {
       if (!decimalAllowed && number === '.') {
         return;
@@ -60,8 +60,8 @@ function App() {
   };
 
   const clearDisplay = () => {
-    setOperation(true);
-    setDecimalAllowed(false);
+    setSelectOperator(false);
+    setDecimalAllowed(true);
     setDisplayValue('0');
   };
 
@@ -70,7 +70,6 @@ function App() {
       const finalDigit = displayValue[displayValue.length - 1];
       const newValue = displayValue.slice(0, -1);
       if (finalDigit === '.') {
-        console.log(finalDigit);
         setDecimalAllowed(true);
       }
       setDisplayValue(newValue || '0');
@@ -80,12 +79,12 @@ function App() {
   const calculateFactorial = (num) => {
     if (num < 0) return 'Não Possível Calcular';
     if (num === 0) return 1;
-    if(num > Maxlenth) return "Infinity";
-    return num * calculateFactorial(num - 1);
-  };
-
-  const verifyNumber = (number) => {
-    return String(number).includes('.') ? true : false;
+    if (num > Maxlenth) return "Infinity";
+    let result = 1;
+    for (let i = 1; i <= num; i++) {
+      result *= i;
+    }
+    return result;
   };
 
   const handleEventListener = (event) => {
@@ -137,15 +136,20 @@ function App() {
     if (!isNaN(num)) {
       const result = calculateFactorial(num);
       setDisplayValue(result.toString());
-
+    } else {
+      setDisplayValue('Não Possível Calcular');
     }
   };
 
   const calculatePercentage = () => {
-    const currentNumber = parseFloat(displayValue);
-    if (!isNaN(currentNumber)) {
-      const result = currentNumber / 100;
-      setDisplayValue(result.toString());
+    try {
+      const currentValue = eval(displayValue);
+      if (!isNaN(currentValue)) {
+        const result = currentValue / 100;
+        setDisplayValue(result.toString());
+      }
+    } catch (error) {
+      setDisplayValue('Não Possível Calcular');
     }
   };
 
