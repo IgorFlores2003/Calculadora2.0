@@ -4,11 +4,13 @@ import gremioLogo from './imagem/Gremio.png';
 
 function App() {
   const [displayValue, setDisplayValue] = useState('0');
+  const [lastClicked, setLastClicked] =  useState();
   const [selectedOperator, setSelectOperator] = useState(false);
   const [decimalAllowed, setDecimalAllowed] = useState(true);
   const Maxlenth = 10000;
 
   const setNumber = (number) => {
+    setLastClicked(number)
     if (selectedOperator) {
       if (!decimalAllowed && number === '.') {
         return;
@@ -132,14 +134,24 @@ function App() {
   };
 
   const calculateFactorialAndDisplay = () => {
-    const num = parseInt(displayValue, 10);
-    if (!isNaN(num)) {
-      const result = calculateFactorial(num);
-      setDisplayValue(result.toString());
-    } else {
-      setDisplayValue('Não Possível Calcular');
+    if (lastClicked) {
+      const num = parseInt(lastClicked, 10); 
+      if (!isNaN(num)) {
+        const factorialResult = calculateFactorial(num); 
+        const lastNumberRegex = new RegExp(num + '$');
+        const newDisplayValue = displayValue.replace(lastNumberRegex, factorialResult); 
+        try {
+          const result = eval(newDisplayValue);
+          setDisplayValue(result.toString()); 
+        } catch (error) {
+          setDisplayValue('Não Possível Calcular'); 
+        }
+      } else {
+        setDisplayValue('Não Possível Calcular');
+      }
     }
   };
+  
 
   const calculatePercentage = () => {
     try {
